@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="page-header">
+  <h1>{{ pregunta.titulo}}</h1>
+</div>
+
+<p>{{ pregunta.descripcion }}</p>
+<hr>
+<div class="categorias">
+  <ul class="list-inline">
+    {% for categoria in pregunta.categoria.all %}
+      <li><a href="{% url 'categoria' categoria.pk %}" class="btn btn-xs btn-info">{{ categoria.nombre }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+
+<hr>
+
+<div class="page-header">
+  <h2>Comentarios</h2>
+</div>
+
+  <ol>
+    {% for comentario in pregunta.comentario_set.all %}
+    <li name="{{ comentario.pk }}">
+      {{ comentario.contenido }} (<a href="#{{ comentario.pk }}">#</a>)
+    </li>
+    {% empty %}
+    <li>No existe ningún comentario. <a href="#comentario-form">Agregar Comentario</a></li>
+    {% endfor %}
+  </ol>
+
+<hr>
+<div class="page-header">
+  <h2>Agregar Comentario</h2>
+</div>
+
+<div id="comentario-form">
+  <form action="{% url 'pregunta' pregunta.pk %}" method="post">
+    <div class="form-group">
+      {{ form.contenido }}
+    </div>
+    {% csrf_token %}
+    <div class="well">
+      <button class="btn btn-block btn-primary" type="submit">Agregar comentario</button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}
+
+{% block title %}Pregunta: {{ pregunta.titulo }}{% endblock %}
