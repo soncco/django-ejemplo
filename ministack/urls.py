@@ -17,7 +17,11 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from preguntas import views
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^preguntas/', include('preguntas.urls')),
+    url(r'^login/$',  views.the_login, name='the_login'),
+    url(r'^logout/$',  views.the_logout, name='the_logout'),
 ]

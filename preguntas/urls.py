@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^categoria/(?P<categoria_id>.*)$',  views.categoria, name='categoria'),
     url(r'^crear$',  views.crear_pregunta, name='crear_pregunta'),
     url(r'^pregunta/(?P<pregunta_id>.*)$',  views.pregunta, name='pregunta'),
+    
 ]

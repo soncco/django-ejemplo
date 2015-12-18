@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import render
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.contrib import messages
+from django.core.urlresolvers import reverse
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 from .models import Categoria, Pregunta, Comentario
 
@@ -44,7 +47,7 @@ def crear_pregunta_hastalas(request):
     context = {'categorias': categorias}
     return render(request, 'crear.html', context)
 
-
+@login_required
 def crear_pregunta(request):
     form = PreguntaForm()
     if request.method == 'POST':
@@ -87,3 +90,32 @@ def pregunta(request, pregunta_id):
         raise Http404
     context = {'pregunta': pregunta, 'form': form}
     return render(request, 'pregunta.html', context)
+
+
+def the_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(username = username, password = password)
+        print user
+        if user is not None:
+            login(request, user)
+            if request.POST.get('next') is not None:
+                return HttpResponseRedirect(request.POST.get('next'))
+            else:
+                return HttpResponseRedirect(reverse('index'))
+            messages.error(request, 'Bienvenido.')
+        else:
+            messages.error(request, 'Revise el usuario o la contraseña.')
+
+    next = request.GET.get('next')
+    context = {'next': next}
+    return render(request, 'login.html', context)
+
+
+def the_logout(request):
+    messages.success(request, 'Hasta pronto')
+    logout(request)
+
+    return HttpResponseRedirect(reverse('index'))

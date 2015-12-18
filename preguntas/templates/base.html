@@ -11,6 +11,9 @@
         <ul class="nav nav-pills">
           <li><a href="{% url 'index' %}">Home</a></li>
           <li><a href="{% url 'crear_pregunta' %}">Crear pregunta</a></li>
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'the_logout' %}">Salir</a></li>
+          {% endif %}
         </ul>
       </nav>
     </header>
